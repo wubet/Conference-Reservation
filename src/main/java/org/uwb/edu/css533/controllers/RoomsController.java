@@ -1,12 +1,14 @@
 package org.uwb.edu.css533.controllers;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.server.ResponseStatusException;
 import org.uwb.edu.css533.exception.ApplicationNotFoundException;
 import org.uwb.edu.css533.models.Room;
+import org.uwb.edu.css533.models.User;
 import org.uwb.edu.css533.services.RoomService;
 
 import java.util.List;
@@ -20,10 +22,14 @@ public class RoomsController {
     private RoomService roomService;
 
     @GetMapping
-    public ResponseEntity<List<Room>> list(){
+    public ResponseEntity<Page<Room>> list(@RequestParam(value = "pageSize") int pageSize, @RequestParam(required = false) Integer page){
+        Page<Room> rooms = null;
         try{
-            List<Room> rooms = roomService.listAllRooms();
-            return new ResponseEntity<List<Room>>(rooms, HttpStatus.OK);
+            if(page == null)
+                rooms = roomService.listAllRooms(pageSize);
+            else
+                rooms = roomService.listAllRooms(pageSize, page);
+            return new ResponseEntity<Page<Room>>(rooms, HttpStatus.OK);
         } catch(ApplicationNotFoundException exception){
             throw new ResponseStatusException(HttpStatus.NOT_FOUND, exception.getMessage());
         }

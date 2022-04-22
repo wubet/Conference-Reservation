@@ -2,6 +2,9 @@ package org.uwb.edu.css533.services;
 
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.uwb.edu.css533.exception.ApplicationNotFoundException;
 import org.uwb.edu.css533.interfaces.IUserService;
@@ -17,10 +20,23 @@ public class UserService implements IUserService {
     @Autowired
     private IUserRepository userRepository;
 
-    public List<User> listAllUsers(){
-        List<User> optionalUsers = null;
+    public Page<User> listAllUsers(int pageSize, int page){
+
+        Pageable PageWithElements = PageRequest.of(page, pageSize);
+        Page<User> optionalUsers = null;
         try{
-            optionalUsers = userRepository.findAll();
+            optionalUsers = userRepository.findAll(PageWithElements);
+        }catch(Exception ex){
+            throw new ApplicationNotFoundException(ex.getMessage());
+        }
+        return optionalUsers;
+    }
+
+    public Page<User> listAllUsers(int pageSize){
+        Pageable firstPageWithTwoElements = PageRequest.of(0, pageSize);
+        Page<User> optionalUsers = null;
+        try{
+            optionalUsers = userRepository.findAll(firstPageWithTwoElements);
         }catch(Exception ex){
             throw new ApplicationNotFoundException(ex.getMessage());
         }
@@ -44,7 +60,7 @@ public class UserService implements IUserService {
         User newUser = null;
         try{
             if(user != null){
-                newUser = userRepository.saveAndFlush(user);
+                newUser = userRepository.save(user);
             }
         }catch(Exception ex){
             throw new ApplicationNotFoundException(ex.getMessage());
@@ -53,15 +69,17 @@ public class UserService implements IUserService {
     }
 
     public User updateUser(User user, Long id){
-        User updatedRoom = null;
+        User updatedUser = null;
         try{
-            User existingUser =  userRepository.getById(id);
-            BeanUtils.copyProperties(user, existingUser, "user_id");
-            updatedRoom = userRepository.saveAndFlush(existingUser);
+            Optional<User> existingUser =  userRepository.findById(id);
+            //BeanUtils.copyProperties(user, existingUser, "user_id");
+            if(existingUser != null)
+                user.setUser_id(existingUser.get().getUser_id());
+            updatedUser = userRepository.save(user);
         }catch(Exception ex){
             throw new ApplicationNotFoundException(ex.getMessage());
         }
-        return updatedRoom;
+        return updatedUser;
     }
 
     public void deleteUser(Long id){

@@ -2,6 +2,9 @@ package org.uwb.edu.css533.services;
 
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.uwb.edu.css533.exception.ApplicationNotFoundException;
 import org.uwb.edu.css533.interfaces.IReservationService;
@@ -18,10 +21,22 @@ public class ReservationService implements IReservationService {
     @Autowired
     private IReservationRepository reservationRepository;
 
-    public List<Reservation> listAllReservations(){
-        List<Reservation> optionalReservations = null;
+    public Page<Reservation> listAllReservations(int pageSize, int page){
+        Pageable PageWithElements = PageRequest.of(page, pageSize);
+        Page<Reservation> optionalReservations = null;
         try{
-            optionalReservations = reservationRepository.findAll();
+            optionalReservations = reservationRepository.findAll(PageWithElements);
+        }catch(Exception ex){
+            throw new ApplicationNotFoundException(ex.getMessage());
+        }
+        return optionalReservations;
+    }
+
+    public Page<Reservation> listAllReservations(int pageSize){
+        Pageable PageWithElements = PageRequest.of(0, pageSize);
+        Page<Reservation> optionalReservations = null;
+        try{
+            optionalReservations = reservationRepository.findAll(PageWithElements);
         }catch(Exception ex){
             throw new ApplicationNotFoundException(ex.getMessage());
         }
@@ -45,7 +60,7 @@ public class ReservationService implements IReservationService {
         Reservation newReservation = null;
         try{
             if(reservation != null){
-                newReservation = reservationRepository.saveAndFlush(reservation);
+                newReservation = reservationRepository.save(reservation);
             }
         }catch(Exception ex){
             throw new ApplicationNotFoundException(ex.getMessage());
@@ -56,9 +71,11 @@ public class ReservationService implements IReservationService {
     public Reservation updateReservation(Reservation reservation, Long id){
         Reservation updatedReservation = null;
         try{
-            Reservation existingReservation =  reservationRepository.getById(id);
-            BeanUtils.copyProperties(reservation, existingReservation, "reservation_id");
-            updatedReservation = reservationRepository.saveAndFlush(existingReservation);
+            Optional<Reservation> existingReservation =  reservationRepository.findById(id);
+            //BeanUtils.copyProperties(reservation, existingReservation, "reservation_id");
+            if(existingReservation != null)
+                reservation.setReservation_id(existingReservation.get().getReservation_id());
+            updatedReservation = reservationRepository.save(reservation);
         }catch(Exception ex){
             throw new ApplicationNotFoundException(ex.getMessage());
         }

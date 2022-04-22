@@ -2,6 +2,9 @@ package org.uwb.edu.css533.services;
 
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.uwb.edu.css533.exception.ApplicationNotFoundException;
 import org.uwb.edu.css533.interfaces.IRoomService;
@@ -17,10 +20,24 @@ public class RoomService implements IRoomService {
     @Autowired
     private IRoomRepository roomRepository;
 
-    public List<Room> listAllRooms(){
-        List<Room> optionalRooms = null;
+    public Page<Room> listAllRooms(int pageSize, int page){
+
+        Pageable PageWithElements = PageRequest.of(page, pageSize);
+        Page<Room> optionalRooms = null;
         try{
-            optionalRooms = roomRepository.findAll();
+            optionalRooms = roomRepository.findAll(PageWithElements);
+        }catch(Exception ex){
+            throw new ApplicationNotFoundException(ex.getMessage());
+        }
+        return optionalRooms;
+    }
+
+    public Page<Room> listAllRooms(int pageSize){
+
+        Pageable PageWithElements = PageRequest.of(0, pageSize);
+        Page<Room> optionalRooms = null;
+        try{
+            optionalRooms = roomRepository.findAll(PageWithElements);
         }catch(Exception ex){
             throw new ApplicationNotFoundException(ex.getMessage());
         }
@@ -44,7 +61,7 @@ public class RoomService implements IRoomService {
         Room newRoom = null;
         try{
             if(room != null){
-                newRoom = roomRepository.saveAndFlush(room);
+                newRoom = roomRepository.save(room);
             }
         }catch(Exception ex){
             throw new ApplicationNotFoundException(ex.getMessage());
@@ -55,9 +72,11 @@ public class RoomService implements IRoomService {
     public Room updateRoom(Room room, Long id){
         Room updatedRoom = null;
         try{
-            Room existingSession =  roomRepository.getById(id);
-            BeanUtils.copyProperties(room, existingSession, "room_id");
-            updatedRoom = roomRepository.saveAndFlush(existingSession);
+            Optional<Room> existingRoom =  roomRepository.findById(id);
+            //BeanUtils.copyProperties(room, existingSession, "room_id");
+            if(existingRoom != null)
+                room.setRoom_id(existingRoom.get().getRoom_id());
+            updatedRoom = roomRepository.save(room);
         }catch(Exception ex){
             throw new ApplicationNotFoundException(ex.getMessage());
         }

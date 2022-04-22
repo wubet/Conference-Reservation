@@ -1,6 +1,7 @@
 package org.uwb.edu.css533.controllers;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -20,10 +21,14 @@ public class UsersController {
     private UserService userService;
 
     @GetMapping
-    public ResponseEntity<List<User>> list(){
+    public ResponseEntity<Page<User>> list( @RequestParam(value = "pageSize") int pageSize, @RequestParam(required = false) Integer page ){
+        Page<User> users = null;
         try{
-            List<User> users = userService.listAllUsers();
-            return new ResponseEntity<List<User>>(users, HttpStatus.OK);
+            if(page == null)
+                users = userService.listAllUsers(pageSize);
+            else
+                users = userService.listAllUsers(pageSize, page);
+            return new ResponseEntity<Page<User>>(users, HttpStatus.OK);
         } catch(ApplicationNotFoundException exception){
             throw new ResponseStatusException(HttpStatus.NOT_FOUND, exception.getMessage());
         }
