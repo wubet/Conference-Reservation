@@ -11,6 +11,7 @@ import org.uwb.edu.css533.interfaces.IRoomService;
 import org.uwb.edu.css533.models.Room;
 import org.uwb.edu.css533.repositories.IRoomRepository;
 
+import java.util.Date;
 import java.util.List;
 import java.util.Optional;
 
@@ -20,7 +21,7 @@ public class RoomService implements IRoomService {
     @Autowired
     private IRoomRepository roomRepository;
 
-    public Page<Room> listAllRooms(int pageSize, int page){
+    public Page<Room> listAllRooms(int page, int pageSize){
 
         Pageable PageWithElements = PageRequest.of(page, pageSize);
         Page<Room> optionalRooms = null;
@@ -32,17 +33,41 @@ public class RoomService implements IRoomService {
         return optionalRooms;
     }
 
-    public Page<Room> listAllRooms(int pageSize){
+//    public Page<Room> listAllRooms(int pageSize){
+//
+//        Pageable PageWithElements = PageRequest.of(0, pageSize);
+//        Page<Room> optionalRooms = null;
+//        try{
+//            optionalRooms = roomRepository.findAll(PageWithElements);
+//        }catch(Exception ex){
+//            throw new ApplicationNotFoundException(ex.getMessage());
+//        }
+//        return optionalRooms;
+//    }
 
-        Pageable PageWithElements = PageRequest.of(0, pageSize);
+    public Page<Room> findRoomsByTime(Date startTime, Date endTime, int page, int pageSize){
+
+        Pageable PageWithElements = PageRequest.of(page, pageSize);
         Page<Room> optionalRooms = null;
         try{
-            optionalRooms = roomRepository.findAll(PageWithElements);
+            optionalRooms = roomRepository.findRoomByTime(startTime, endTime, PageWithElements);
         }catch(Exception ex){
             throw new ApplicationNotFoundException(ex.getMessage());
         }
         return optionalRooms;
     }
+
+//    public Page<Room> findRoomsByTime(Date startTime, Date endTime, int pageSize){
+//
+//        Pageable PageWithElements = PageRequest.of(0, pageSize);
+//        Page<Room> optionalRooms = null;
+//        try{
+//            optionalRooms = roomRepository.findRoomByTime(startTime, endTime, PageWithElements);
+//        }catch(Exception ex){
+//            throw new ApplicationNotFoundException(ex.getMessage());
+//        }
+//        return optionalRooms;
+//    }
 
     public Room findRoom(Long id){
         Room room = null;
@@ -61,7 +86,7 @@ public class RoomService implements IRoomService {
         Room newRoom = null;
         try{
             if(room != null){
-                newRoom = roomRepository.save(room);
+                newRoom = roomRepository.saveAndFlush(room);
             }
         }catch(Exception ex){
             throw new ApplicationNotFoundException(ex.getMessage());
@@ -69,14 +94,26 @@ public class RoomService implements IRoomService {
         return newRoom;
     }
 
+//    public Room updateRoom(Room room, Long id){
+//        Room updatedRoom = null;
+//        try{
+//            Optional<Room> existingRoom =  roomRepository.findById(id);
+//            //BeanUtils.copyProperties(room, existingSession, "room_id");
+//            if(existingRoom != null)
+//                room.setRoom_id(existingRoom.get().getRoom_id());
+//            updatedRoom = roomRepository.save(room);
+//        }catch(Exception ex){
+//            throw new ApplicationNotFoundException(ex.getMessage());
+//        }
+//        return updatedRoom;
+//    }
+
     public Room updateRoom(Room room, Long id){
         Room updatedRoom = null;
         try{
-            Optional<Room> existingRoom =  roomRepository.findById(id);
-            //BeanUtils.copyProperties(room, existingSession, "room_id");
-            if(existingRoom != null)
-                room.setRoom_id(existingRoom.get().getRoom_id());
-            updatedRoom = roomRepository.save(room);
+            Room existingSession =  roomRepository.getById(id);
+            BeanUtils.copyProperties(room, existingSession, "room_id");
+            updatedRoom = roomRepository.saveAndFlush(room);
         }catch(Exception ex){
             throw new ApplicationNotFoundException(ex.getMessage());
         }

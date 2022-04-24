@@ -7,6 +7,8 @@ import lombok.Getter;
 import lombok.Setter;
 
 import javax.persistence.*;
+import javax.validation.constraints.NotEmpty;
+import javax.validation.constraints.NotNull;
 import java.util.Date;
 import java.util.List;
 
@@ -21,12 +23,24 @@ public class Reservation {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private long reservation_id;
 //    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "MM-DD-YYYY HH:MM")
+    @NotNull
     private Date meeting_start_time;
+    @NotNull
 //    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "MM-DD-YYYY HH:MM")
     private Date meeting_end_time;
+    @NotEmpty
     private String reservation_description;
+    @NotEmpty
     private String status;
 
+    @Temporal(TemporalType.TIMESTAMP)
+    @NotNull
+    Date updateDateTime;
+
+    @Temporal(TemporalType.TIMESTAMP)
+    Date createDateTime;
+
+//    @JsonBackReference
     @ManyToOne(fetch = FetchType.LAZY, optional = false)
     @JoinColumn(name = "room_id", nullable = false)
     @JsonIgnoreProperties("reservation, user")

@@ -1,6 +1,7 @@
 package org.uwb.edu.css533.controllers;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -11,6 +12,7 @@ import org.uwb.edu.css533.models.Room;
 import org.uwb.edu.css533.models.User;
 import org.uwb.edu.css533.services.RoomService;
 
+import java.util.Date;
 import java.util.List;
 
 
@@ -21,14 +23,36 @@ public class RoomsController {
     @Autowired
     private RoomService roomService;
 
+    @Value("${paging.default.pageSize}")
+    private int size;
+
     @GetMapping
-    public ResponseEntity<Page<Room>> list(@RequestParam(value = "pageSize") int pageSize, @RequestParam(required = false) Integer page){
+    public ResponseEntity<Page<Room>> listRooms(@RequestParam(value = "page" ) Integer page,
+                                                @RequestParam(required = false) Integer pageSize){
         Page<Room> rooms = null;
         try{
-            if(page == null)
-                rooms = roomService.listAllRooms(pageSize);
+            if(pageSize == null)
+                rooms = roomService.listAllRooms(page, size);
             else
-                rooms = roomService.listAllRooms(pageSize, page);
+                rooms = roomService.listAllRooms(page, pageSize);
+            return new ResponseEntity<Page<Room>>(rooms, HttpStatus.OK);
+        } catch(ApplicationNotFoundException exception){
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND, exception.getMessage());
+        }
+    }
+
+    @GetMapping
+    @RequestMapping("/availability")
+    public ResponseEntity<Page<Room>> listByTime(@RequestParam(value = "startTime") Date startTime,
+                                                      @RequestParam(value = "endTime") Date endTime,
+                                                      @RequestParam(value = "pageSize") Integer page,
+                                                      @RequestParam(required = false) Integer pageSize){
+        Page<Room> rooms = null;
+        try{
+            if(pageSize == null)
+                rooms = roomService.findRoomsByTime(startTime, endTime, page, size);
+            else
+                rooms = roomService.findRoomsByTime(startTime, endTime, page, pageSize);
             return new ResponseEntity<Page<Room>>(rooms, HttpStatus.OK);
         } catch(ApplicationNotFoundException exception){
             throw new ResponseStatusException(HttpStatus.NOT_FOUND, exception.getMessage());

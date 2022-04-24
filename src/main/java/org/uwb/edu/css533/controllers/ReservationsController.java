@@ -1,6 +1,7 @@
 package org.uwb.edu.css533.controllers;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -20,14 +21,18 @@ public class ReservationsController {
     @Autowired
     private ReservationService reservationService;
 
+    @Value("${paging.default.pageSize}")
+    private int size;
+
     @GetMapping
-    public ResponseEntity<Page<Reservation>> list(@RequestParam(value = "pageSize") int pageSize, @RequestParam(required = false) Integer page){
+    public ResponseEntity<Page<Reservation>> list(@RequestParam(value = "page" ) Integer page,
+                                                  @RequestParam( required = false) Integer pageSize){
         Page<Reservation> reservations = null;
         try{
-            if(page == null)
-                reservations = reservationService.listAllReservations(pageSize);
+            if(pageSize == null)
+                reservations = reservationService.listAllReservations(page, size);
             else
-                reservations = reservationService.listAllReservations(pageSize, page);
+                reservations = reservationService.listAllReservations(page, pageSize);
             return new ResponseEntity<Page<Reservation>>(reservations, HttpStatus.OK);
         } catch(ApplicationNotFoundException exception){
             throw new ResponseStatusException(HttpStatus.NOT_FOUND, exception.getMessage());

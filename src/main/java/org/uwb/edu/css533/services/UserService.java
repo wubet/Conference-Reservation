@@ -2,9 +2,11 @@ package org.uwb.edu.css533.services;
 
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.web.PageableDefault;
 import org.springframework.stereotype.Service;
 import org.uwb.edu.css533.exception.ApplicationNotFoundException;
 import org.uwb.edu.css533.interfaces.IUserService;
@@ -20,9 +22,11 @@ public class UserService implements IUserService {
     @Autowired
     private IUserRepository userRepository;
 
-    public Page<User> listAllUsers(int pageSize, int page){
+
+    public Page<User> listAllUsers(int page, int pageSize){
 
         Pageable PageWithElements = PageRequest.of(page, pageSize);
+
         Page<User> optionalUsers = null;
         try{
             optionalUsers = userRepository.findAll(PageWithElements);
@@ -32,16 +36,16 @@ public class UserService implements IUserService {
         return optionalUsers;
     }
 
-    public Page<User> listAllUsers(int pageSize){
-        Pageable firstPageWithTwoElements = PageRequest.of(0, pageSize);
-        Page<User> optionalUsers = null;
-        try{
-            optionalUsers = userRepository.findAll(firstPageWithTwoElements);
-        }catch(Exception ex){
-            throw new ApplicationNotFoundException(ex.getMessage());
-        }
-        return optionalUsers;
-    }
+//    public Page<User> listAllUsers(int pageSize){
+//        Pageable firstPageWithTwoElements = PageRequest.of(0, pageSize);
+//        Page<User> optionalUsers = null;
+//        try{
+//            optionalUsers = userRepository.findAll(firstPageWithTwoElements);
+//        }catch(Exception ex){
+//            throw new ApplicationNotFoundException(ex.getMessage());
+//        }
+//        return optionalUsers;
+//    }
 
     public User findUser(Long id){
         User user = null;
@@ -60,7 +64,7 @@ public class UserService implements IUserService {
         User newUser = null;
         try{
             if(user != null){
-                newUser = userRepository.save(user);
+                newUser = userRepository.saveAndFlush(user);
             }
         }catch(Exception ex){
             throw new ApplicationNotFoundException(ex.getMessage());
@@ -68,18 +72,30 @@ public class UserService implements IUserService {
         return newUser;
     }
 
+//    public User updateUser(User user, Long id){
+//        User updatedUser = null;
+//        try{
+//            Optional<User> existingUser =  userRepository.findById(id);
+//            //BeanUtils.copyProperties(user, existingUser, "user_id");
+//            if(existingUser != null)
+//                user.setUser_id(existingUser.get().getUser_id());
+//            updatedUser = userRepository.save(user);
+//        }catch(Exception ex){
+//            throw new ApplicationNotFoundException(ex.getMessage());
+//        }
+//        return updatedUser;
+//    }
+
     public User updateUser(User user, Long id){
-        User updatedUser = null;
+        User updatedRoom = null;
         try{
-            Optional<User> existingUser =  userRepository.findById(id);
-            //BeanUtils.copyProperties(user, existingUser, "user_id");
-            if(existingUser != null)
-                user.setUser_id(existingUser.get().getUser_id());
-            updatedUser = userRepository.save(user);
+            User existingUser =  userRepository.getById(id);
+            BeanUtils.copyProperties(user, existingUser, "user_id");
+            updatedRoom = userRepository.saveAndFlush(user);
         }catch(Exception ex){
             throw new ApplicationNotFoundException(ex.getMessage());
         }
-        return updatedUser;
+        return updatedRoom;
     }
 
     public void deleteUser(Long id){
