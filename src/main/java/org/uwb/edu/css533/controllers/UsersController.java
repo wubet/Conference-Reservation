@@ -74,7 +74,7 @@ public class UsersController {
     public ResponseEntity delete(@PathVariable Long id){
         try{
             userService.deleteUser(id);
-            return new ResponseEntity( HttpStatus.OK);
+            return new ResponseEntity( HttpStatus.NO_CONTENT);
         } catch(ApplicationNotFoundException exception){
             throw new ResponseStatusException(HttpStatus.NOT_FOUND, exception.getMessage());
         }

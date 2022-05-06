@@ -28,7 +28,7 @@ public class User {
 
     @NotNull
     @Email
-    @Size(max = 20)
+    @Size(max = 50)
     @Column(unique = true)
     private String email_id;
 

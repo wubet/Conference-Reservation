@@ -21,6 +21,9 @@ public class RoomService implements IRoomService {
     @Autowired
     private IRoomRepository roomRepository;
 
+    /*
+    *
+    * */
     public Page<Room> listAllRooms(int page, int pageSize){
 
         Pageable PageWithElements = PageRequest.of(page, pageSize);
@@ -45,6 +48,9 @@ public class RoomService implements IRoomService {
 //        return optionalRooms;
 //    }
 
+    /*
+    *
+    * */
     public Page<Room> findRoomsByTime(Date startTime, Date endTime, int page, int pageSize){
 
         Pageable PageWithElements = PageRequest.of(page, pageSize);
@@ -69,6 +75,9 @@ public class RoomService implements IRoomService {
 //        return optionalRooms;
 //    }
 
+    /*
+    *
+    * */
     public Room findRoom(Long id){
         Room room = null;
         try{
@@ -82,6 +91,9 @@ public class RoomService implements IRoomService {
         return room;
     }
 
+    /*
+    *
+    * */
     public Room createRoom(Room room){
         Room newRoom = null;
         try{
@@ -108,18 +120,24 @@ public class RoomService implements IRoomService {
 //        return updatedRoom;
 //    }
 
+    /*
+    *
+    * */
     public Room updateRoom(Room room, Long id){
         Room updatedRoom = null;
         try{
-            Room existingSession =  roomRepository.getById(id);
-            BeanUtils.copyProperties(room, existingSession, "room_id");
-            updatedRoom = roomRepository.saveAndFlush(room);
+            Room existingRoom =  roomRepository.getById(id);
+            BeanUtils.copyProperties(room, existingRoom, "room_id");
+            updatedRoom = roomRepository.saveAndFlush(existingRoom);
         }catch(Exception ex){
             throw new ApplicationNotFoundException(ex.getMessage());
         }
         return updatedRoom;
     }
 
+    /*
+    *
+    * */
     public void deleteRoom(Long id){
         try{
             roomRepository.deleteById(id);

@@ -17,9 +17,11 @@ public interface IRoomRepository extends JpaRepository<Room, Long> {
     @Query(value = "SELECT r FROM rooms r " +
             "JOIN fetch r.reservations reservation " +
             "WHERE reservation.meeting_start_time >= :endTime " +
-            "AND reservation.meeting_end_time <= :startTime ",
+            "AND reservation.meeting_end_time <= :startTime " +
+            "AND r.status == 'Active' ",
              nativeQuery = true  )
     Page<Room> findRoomByTime(Date startTime, Date endTime, Pageable pageable);
+
 // {
 //        Page<Room> rooms = null;
 //        return rooms;

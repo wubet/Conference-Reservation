@@ -94,7 +94,7 @@ public class RoomsController {
     public ResponseEntity delete(@PathVariable Long id){
         try{
             roomService.deleteRoom(id);
-            return new ResponseEntity( HttpStatus.OK);
+            return new ResponseEntity( HttpStatus.NO_CONTENT);
         } catch(ApplicationNotFoundException exception){
             throw new ResponseStatusException(HttpStatus.NOT_FOUND, exception.getMessage());
         }

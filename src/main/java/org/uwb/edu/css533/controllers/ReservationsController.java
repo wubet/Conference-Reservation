@@ -12,6 +12,7 @@ import org.uwb.edu.css533.models.Reservation;
 import org.uwb.edu.css533.models.Room;
 import org.uwb.edu.css533.services.ReservationService;
 
+import java.util.Date;
 import java.util.List;
 
 @RestController
@@ -33,6 +34,25 @@ public class ReservationsController {
                 reservations = reservationService.listAllReservations(page, size);
             else
                 reservations = reservationService.listAllReservations(page, pageSize);
+            return new ResponseEntity<Page<Reservation>>(reservations, HttpStatus.OK);
+        } catch(ApplicationNotFoundException exception){
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND, exception.getMessage());
+        }
+    }
+
+
+    @GetMapping
+    @RequestMapping("/booked")
+    public ResponseEntity<Page<Reservation>> listByDate(@RequestParam(value = "meetingDate") Date meetingDate,
+                                                        @RequestParam(value = "rangeDate") Date rangeDate,
+                                                        @RequestParam(value = "pageSize") Integer page,
+                                                        @RequestParam(required = false) Integer pageSize){
+        Page<Reservation> reservations = null;
+        try{
+            if(pageSize == null)
+                reservations = reservationService.findReservationByDate(meetingDate, rangeDate, page, size);
+            else
+                reservations = reservationService.findReservationByDate(meetingDate, rangeDate, page, pageSize);
             return new ResponseEntity<Page<Reservation>>(reservations, HttpStatus.OK);
         } catch(ApplicationNotFoundException exception){
             throw new ResponseStatusException(HttpStatus.NOT_FOUND, exception.getMessage());
@@ -74,7 +94,7 @@ public class ReservationsController {
     public ResponseEntity delete(@PathVariable Long id){
         try{
             reservationService.deleteReservation(id);
-            return new ResponseEntity( HttpStatus.OK);
+            return new ResponseEntity( HttpStatus.NO_CONTENT);
         } catch(ApplicationNotFoundException exception){
             throw new ResponseStatusException(HttpStatus.NOT_FOUND, exception.getMessage());
         }

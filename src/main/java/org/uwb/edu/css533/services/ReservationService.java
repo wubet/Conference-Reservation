@@ -9,9 +9,11 @@ import org.springframework.stereotype.Service;
 import org.uwb.edu.css533.exception.ApplicationNotFoundException;
 import org.uwb.edu.css533.interfaces.IReservationService;
 import org.uwb.edu.css533.models.Reservation;
+import org.uwb.edu.css533.models.Room;
 import org.uwb.edu.css533.repositories.IReservationRepository;
 
 
+import java.util.Date;
 import java.util.List;
 import java.util.Optional;
 
@@ -21,11 +23,29 @@ public class ReservationService implements IReservationService {
     @Autowired
     private IReservationRepository reservationRepository;
 
+    /*
+    *
+    * */
     public Page<Reservation> listAllReservations(int page, int pageSize){
         Pageable PageWithElements = PageRequest.of(page, pageSize);
         Page<Reservation> optionalReservations = null;
         try{
             optionalReservations = reservationRepository.findAll(PageWithElements);
+        }catch(Exception ex){
+            throw new ApplicationNotFoundException(ex.getMessage());
+        }
+        return optionalReservations;
+    }
+
+    /*
+     *
+     * */
+    @Override
+    public Page<Reservation> findReservationByDate(Date meetingDate, Date rangeDate, Integer page, int pageSize) {
+        Pageable PageWithElements = PageRequest.of(page, pageSize);
+        Page<Reservation> optionalReservations = null;
+        try{
+            optionalReservations = reservationRepository.findBookedRoomsByDate(meetingDate, rangeDate, PageWithElements);
         }catch(Exception ex){
             throw new ApplicationNotFoundException(ex.getMessage());
         }
@@ -43,19 +63,26 @@ public class ReservationService implements IReservationService {
 //        return optionalReservations;
 //    }
 
-    public Reservation findReservation(Long id){
+    /*
+    *
+    * */
+    public Reservation findReservation(Long id) {
+
         Reservation reservation = null;
-        try{
+        try {
             Optional<Reservation> optionalReservation = reservationRepository.findById(id);
-            if(optionalReservation.isPresent()){
+            if (optionalReservation.isPresent()) {
                 reservation = optionalReservation.get();
             }
-        }catch(Exception ex){
+        } catch (Exception ex) {
             throw new ApplicationNotFoundException(ex.getMessage());
         }
         return reservation;
     }
 
+    /*
+    *
+    * */
     public Reservation createReservation(Reservation reservation){
         Reservation newReservation = null;
         try{
@@ -82,18 +109,23 @@ public class ReservationService implements IReservationService {
 //        return updatedReservation;
 //    }
 
+    /*
+    *
+    * */
     public Reservation updateReservation(Reservation reservation, Long id){
         Reservation updatedReservation = null;
         try{
             Reservation existingReservation =  reservationRepository.getById(id);
             BeanUtils.copyProperties(reservation, existingReservation, "reservation_id");
-            updatedReservation = reservationRepository.saveAndFlush(reservation);
+            updatedReservation = reservationRepository.saveAndFlush(existingReservation);
         }catch(Exception ex){
             throw new ApplicationNotFoundException(ex.getMessage());
         }
         return updatedReservation;
     }
 
+    /*
+    * */
     public void deleteReservation(Long id){
         try{
             reservationRepository.deleteById(id);

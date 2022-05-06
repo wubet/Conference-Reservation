@@ -13,4 +13,5 @@ public interface IRoomService {
     Room createRoom(Room room);
     Room updateRoom(Room room, Long id);
     void deleteRoom(Long id);
+//    Page<Room> findBookedRoomsByDate(Date meetingDate, Integer page, int size);
 }

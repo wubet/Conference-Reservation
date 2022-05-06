@@ -22,7 +22,9 @@ public class UserService implements IUserService {
     @Autowired
     private IUserRepository userRepository;
 
-
+    /*
+    *
+    * */
     public Page<User> listAllUsers(int page, int pageSize){
 
         Pageable PageWithElements = PageRequest.of(page, pageSize);
@@ -47,6 +49,9 @@ public class UserService implements IUserService {
 //        return optionalUsers;
 //    }
 
+    /*
+    *
+    * */
     public User findUser(Long id){
         User user = null;
         try{
@@ -60,6 +65,9 @@ public class UserService implements IUserService {
         return user;
     }
 
+    /*
+    *
+    * */
     public User createUser(User user){
         User newUser = null;
         try{
@@ -86,18 +94,24 @@ public class UserService implements IUserService {
 //        return updatedUser;
 //    }
 
+    /*
+    *
+    * */
     public User updateUser(User user, Long id){
         User updatedRoom = null;
         try{
             User existingUser =  userRepository.getById(id);
             BeanUtils.copyProperties(user, existingUser, "user_id");
-            updatedRoom = userRepository.saveAndFlush(user);
+            updatedRoom = userRepository.saveAndFlush(existingUser);
         }catch(Exception ex){
             throw new ApplicationNotFoundException(ex.getMessage());
         }
         return updatedRoom;
     }
 
+    /*
+    *
+    * */
     public void deleteUser(Long id){
         try{
             userRepository.deleteById(id);
