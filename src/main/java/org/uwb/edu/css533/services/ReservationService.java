@@ -41,11 +41,11 @@ public class ReservationService implements IReservationService {
      *
      * */
     @Override
-    public Page<Reservation> findReservationByDate(Date meetingDate, Date rangeDate, Integer page, int pageSize) {
+    public Page<Reservation> findReservationByDate(Date startDate, Date endDate, Integer page, int pageSize) {
         Pageable PageWithElements = PageRequest.of(page, pageSize);
         Page<Reservation> optionalReservations = null;
         try{
-            optionalReservations = reservationRepository.findBookedRoomsByDate(meetingDate, rangeDate, PageWithElements);
+            optionalReservations = reservationRepository.findBookedRoomsByDate(startDate, endDate, PageWithElements);
         }catch(Exception ex){
             throw new ApplicationNotFoundException(ex.getMessage());
         }

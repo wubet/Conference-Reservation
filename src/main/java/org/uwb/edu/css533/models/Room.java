@@ -21,7 +21,6 @@ public class Room {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private long room_id;
     @NotNull
-    @Column(unique = true)
     private Integer room_number;
     @NotEmpty
     @Column(unique = true)

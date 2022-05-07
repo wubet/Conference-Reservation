@@ -13,8 +13,8 @@ import java.util.Date;
 public interface IReservationRepository extends JpaRepository<Reservation, Long> {
 
     @Query(value = "SELECT rs FROM reservations rs " +
-            "WHERE rs.meeting_start_time between :meetingDate AND :rangeDate " +
+            "WHERE rs.meeting_start_time between :startDate AND :endDate " +
             "AND rs.status == 'Active' ",
             nativeQuery = true  )
-    Page<Reservation> findBookedRoomsByDate(Date meetingDate, Date rangeDate, Pageable pageWithElements);
+    Page<Reservation> findBookedRoomsByDate(Date startDate, Date endDate, Pageable pageWithElements);
 }

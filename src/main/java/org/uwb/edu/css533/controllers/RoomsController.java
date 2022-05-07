@@ -44,9 +44,9 @@ public class RoomsController {
     @GetMapping
     @RequestMapping("/availability")
     public ResponseEntity<Page<Room>> listByTime(@RequestParam(value = "startTime") Date startTime,
-                                                      @RequestParam(value = "endTime") Date endTime,
-                                                      @RequestParam(value = "pageSize") Integer page,
-                                                      @RequestParam(required = false) Integer pageSize){
+                                                 @RequestParam(value = "endTime") Date endTime,
+                                                 @RequestParam(value = "pageSize") Integer page,
+                                                 @RequestParam(required = false) Integer pageSize){
         Page<Room> rooms = null;
         try{
             if(pageSize == null)

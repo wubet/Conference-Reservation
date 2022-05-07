@@ -43,16 +43,16 @@ public class ReservationsController {
 
     @GetMapping
     @RequestMapping("/booked")
-    public ResponseEntity<Page<Reservation>> listByDate(@RequestParam(value = "meetingDate") Date meetingDate,
-                                                        @RequestParam(value = "rangeDate") Date rangeDate,
+    public ResponseEntity<Page<Reservation>> listByDate(@RequestParam(value = "startDate") Date startDate,
+                                                        @RequestParam(value = "endDate") Date endDate,
                                                         @RequestParam(value = "pageSize") Integer page,
                                                         @RequestParam(required = false) Integer pageSize){
         Page<Reservation> reservations = null;
         try{
             if(pageSize == null)
-                reservations = reservationService.findReservationByDate(meetingDate, rangeDate, page, size);
+                reservations = reservationService.findReservationByDate(startDate, endDate, page, size);
             else
-                reservations = reservationService.findReservationByDate(meetingDate, rangeDate, page, pageSize);
+                reservations = reservationService.findReservationByDate(startDate, endDate, page, pageSize);
             return new ResponseEntity<Page<Reservation>>(reservations, HttpStatus.OK);
         } catch(ApplicationNotFoundException exception){
             throw new ResponseStatusException(HttpStatus.NOT_FOUND, exception.getMessage());
