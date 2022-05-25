@@ -1,0 +1,105 @@
+{
+  "content": [
+    {
+      "reservation_id": 1,
+      "eventId": 0,
+      "title": "Annual General Meeting",
+      "reservationDescription": "It is prepared for all memebers of the org.",
+      "meetingStartTime": "2022-05-19T19:00:38.000+00:00",
+      "meetingEndTime": "2022-05-19T19:15:38.000+00:00",
+      "status": "active",
+      "updateDateTime": "1970-01-20T03:09:45.938+00:00",
+      "createDateTime": "1970-01-20T03:09:45.938+00:00",
+      "room": {
+        "room_id": 1,
+        "roomNumber": 150,
+        "roomName": "Elite",
+        "roomCapacity": 25,
+        "roomLocation": "Building-3",
+        "roomType": "Auditorium",
+        "status": "active",
+        "updateDateTime": "2022-05-19T18:45:28.907+00:00",
+        "createDateTime": "2022-05-19T18:45:28.907+00:00",
+        "reservations": [
+          1
+        ]
+      },
+      "user": {
+        "user_id": 1,
+        "firstName": "Wube",
+        "lastName": "Tuffa",
+        "userName": "wube.tuffa",
+        "emailId": "wube.tuffa@gmail.com",
+        "phoneNumber": "2067793437",
+        "updateDateTime": "2022-05-19T18:23:39.260+00:00",
+        "createDateTime": "2022-05-19T18:23:39.260+00:00",
+        "reservations": [
+          1
+        ]
+      }
+    },
+    {
+      "reservation_id": 2,
+      "eventId": 0,
+      "title": "Sprint Retrospective",
+      "reservationDescription": "It is scheduled to evaluate sprint performance",
+      "meetingStartTime": "2022-05-19T19:30:17.000+00:00",
+      "meetingEndTime": "2022-05-19T19:41:17.000+00:00",
+      "status": "active",
+      "updateDateTime": "1970-01-20T03:09:47.477+00:00",
+      "createDateTime": "1970-01-20T03:09:47.477+00:00",
+      "room": {
+        "room_id": 2,
+        "roomNumber": 100,
+        "roomName": "Vipers",
+        "roomCapacity": 20,
+        "roomLocation": "Building-1",
+        "roomType": "Banquet",
+        "status": "active",
+        "updateDateTime": "2022-05-19T19:09:43.147+00:00",
+        "createDateTime": "2022-05-19T19:09:43.147+00:00",
+        "reservations": [
+          2
+        ]
+      },
+      "user": {
+        "user_id": 2,
+        "firstName": "Elzabet",
+        "lastName": "Warner",
+        "userName": "eWarner",
+        "emailId": "eWarner@gmail.com",
+        "phoneNumber": "5062223333",
+        "updateDateTime": "2022-05-19T18:45:28.907+00:00",
+        "createDateTime": "2022-05-19T18:45:28.907+00:00",
+        "reservations": [
+          2
+        ]
+      }
+    }
+  ],
+  "pageable": {
+    "sort": {
+      "sorted": false,
+      "unsorted": true,
+      "empty": true
+    },
+    "pageNumber": 0,
+    "pageSize": 20,
+    "offset": 0,
+    "unpaged": false,
+    "paged": true
+  },
+  "totalPages": 1,
+  "totalElements": 2,
+  "last": true,
+  "numberOfElements": 2,
+  "number": 0,
+  "size": 20,
+  "sort": {
+    "sorted": false,
+    "unsorted": true,
+    "empty": true
+  },
+  "first": true,
+  "empty": false
+}
