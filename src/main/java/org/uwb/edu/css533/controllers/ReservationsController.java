@@ -25,6 +25,7 @@ public class ReservationsController {
     @Value("${paging.default.pageSize}")
     private int size;
 
+    @CrossOrigin
     @GetMapping
     public ResponseEntity<Page<Reservation>> list(@RequestParam(value = "page" ) Integer page,
                                                   @RequestParam( required = false) Integer pageSize){
@@ -40,25 +41,46 @@ public class ReservationsController {
         }
     }
 
-
+    @CrossOrigin
     @GetMapping
     @RequestMapping("/booked")
-    public ResponseEntity<Page<Reservation>> listByDate(@RequestParam(value = "startDate") Date startDate,
+    public ResponseEntity<Page<Reservation>> listByDate( @RequestParam(value = "page") Integer page,
+                                                        @RequestParam(value = "startDate") Date startDate,
                                                         @RequestParam(value = "endDate") Date endDate,
-                                                        @RequestParam(value = "pageSize") Integer page,
                                                         @RequestParam(required = false) Integer pageSize){
         Page<Reservation> reservations = null;
         try{
             if(pageSize == null)
-                reservations = reservationService.findReservationByDate(startDate, endDate, page, size);
+                reservations = reservationService.findReservationsByDate(startDate, endDate, page, size);
             else
-                reservations = reservationService.findReservationByDate(startDate, endDate, page, pageSize);
+                reservations = reservationService.findReservationsByDate(startDate, endDate, page, pageSize);
             return new ResponseEntity<Page<Reservation>>(reservations, HttpStatus.OK);
         } catch(ApplicationNotFoundException exception){
             throw new ResponseStatusException(HttpStatus.NOT_FOUND, exception.getMessage());
         }
     }
 
+    @CrossOrigin
+    @GetMapping
+    @RequestMapping("/booked/room/{id}")
+    public ResponseEntity<Page<Reservation>> listByRoomAndDate(@PathVariable("id") Long id,
+                                                               @RequestParam(value = "page") Integer page,
+                                                               @RequestParam(value = "startDate") Date startDate,
+                                                               @RequestParam(value = "endDate") Date endDate,
+                                                               @RequestParam(required = false) Integer pageSize){
+        Page<Reservation> reservations = null;
+        try{
+            if(pageSize == null)
+                reservations = reservationService.findReservationByDateAndRoom(id,startDate, endDate, page, size);
+            else
+                reservations = reservationService.findReservationByDateAndRoom(id, startDate, endDate, page, pageSize);
+            return new ResponseEntity<Page<Reservation>>(reservations, HttpStatus.OK);
+        } catch(ApplicationNotFoundException exception){
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND, exception.getMessage());
+        }
+    }
+
+    @CrossOrigin
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
     public ResponseEntity<Reservation> create(@RequestBody final Reservation reservation){
@@ -70,6 +92,7 @@ public class ReservationsController {
         }
     }
 
+    @CrossOrigin
     @GetMapping
     @RequestMapping("{id}")
     public ResponseEntity<Reservation> get(@PathVariable("id") Long id){
@@ -80,6 +103,7 @@ public class ReservationsController {
         }
     }
 
+    @CrossOrigin
     @RequestMapping(value = "{id}", method = RequestMethod.PUT)
     public ResponseEntity<Reservation> update(@PathVariable Long id, @RequestBody final Reservation reservation){
         try{
@@ -90,6 +114,7 @@ public class ReservationsController {
         }
     }
 
+    @CrossOrigin
     @RequestMapping(value = "{id}", method = RequestMethod.DELETE)
     public ResponseEntity delete(@PathVariable Long id){
         try{

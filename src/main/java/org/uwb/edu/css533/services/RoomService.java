@@ -5,6 +5,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.uwb.edu.css533.exception.ApplicationNotFoundException;
 import org.uwb.edu.css533.interfaces.IRoomService;
@@ -21,9 +22,12 @@ public class RoomService implements IRoomService {
     @Autowired
     private IRoomRepository roomRepository;
 
-    /*
-    *
-    * */
+    /**
+     *
+     * @param page
+     * @param pageSize
+     * @return
+     */
     public Page<Room> listAllRooms(int page, int pageSize){
 
         Pageable PageWithElements = PageRequest.of(page, pageSize);
@@ -36,21 +40,14 @@ public class RoomService implements IRoomService {
         return optionalRooms;
     }
 
-//    public Page<Room> listAllRooms(int pageSize){
-//
-//        Pageable PageWithElements = PageRequest.of(0, pageSize);
-//        Page<Room> optionalRooms = null;
-//        try{
-//            optionalRooms = roomRepository.findAll(PageWithElements);
-//        }catch(Exception ex){
-//            throw new ApplicationNotFoundException(ex.getMessage());
-//        }
-//        return optionalRooms;
-//    }
-
-    /*
-    *
-    * */
+    /**
+     *
+     * @param startTime
+     * @param endTime
+     * @param page
+     * @param pageSize
+     * @return
+     */
     public Page<Room> findRoomsByTime(Date startTime, Date endTime, int page, int pageSize){
 
         Pageable PageWithElements = PageRequest.of(page, pageSize);
@@ -63,21 +60,11 @@ public class RoomService implements IRoomService {
         return optionalRooms;
     }
 
-//    public Page<Room> findRoomsByTime(Date startTime, Date endTime, int pageSize){
-//
-//        Pageable PageWithElements = PageRequest.of(0, pageSize);
-//        Page<Room> optionalRooms = null;
-//        try{
-//            optionalRooms = roomRepository.findRoomByTime(startTime, endTime, PageWithElements);
-//        }catch(Exception ex){
-//            throw new ApplicationNotFoundException(ex.getMessage());
-//        }
-//        return optionalRooms;
-//    }
-
-    /*
-    *
-    * */
+    /**
+     *
+     * @param id
+     * @return
+     */
     public Room findRoom(Long id){
         Room room = null;
         try{
@@ -91,9 +78,11 @@ public class RoomService implements IRoomService {
         return room;
     }
 
-    /*
-    *
-    * */
+    /**
+     *
+     * @param room
+     * @return
+     */
     public Room createRoom(Room room){
         Room newRoom = null;
         try{
@@ -106,23 +95,12 @@ public class RoomService implements IRoomService {
         return newRoom;
     }
 
-//    public Room updateRoom(Room room, Long id){
-//        Room updatedRoom = null;
-//        try{
-//            Optional<Room> existingRoom =  roomRepository.findById(id);
-//            //BeanUtils.copyProperties(room, existingSession, "room_id");
-//            if(existingRoom != null)
-//                room.setRoom_id(existingRoom.get().getRoom_id());
-//            updatedRoom = roomRepository.save(room);
-//        }catch(Exception ex){
-//            throw new ApplicationNotFoundException(ex.getMessage());
-//        }
-//        return updatedRoom;
-//    }
-
-    /*
-    *
-    * */
+    /**
+     *
+     * @param room
+     * @param id
+     * @return
+     */
     public Room updateRoom(Room room, Long id){
         Room updatedRoom = null;
         try{
@@ -135,9 +113,10 @@ public class RoomService implements IRoomService {
         return updatedRoom;
     }
 
-    /*
-    *
-    * */
+    /**
+     *
+     * @param id
+     */
     public void deleteRoom(Long id){
         try{
             roomRepository.deleteById(id);

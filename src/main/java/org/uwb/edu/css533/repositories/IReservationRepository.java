@@ -12,9 +12,17 @@ import java.util.Date;
 
 public interface IReservationRepository extends JpaRepository<Reservation, Long> {
 
-    @Query(value = "SELECT rs FROM reservations rs " +
-            "WHERE rs.meeting_start_time between :startDate AND :endDate " +
-            "AND rs.status == 'Active' ",
-            nativeQuery = true  )
-    Page<Reservation> findBookedRoomsByDate(Date startDate, Date endDate, Pageable pageWithElements);
+    @Query("SELECT rs FROM Reservations AS rs " +
+            "WHERE rs.start between :startDate AND :endDate " +
+            "AND rs.status = 'Active' ")
+    Page<Reservation> findReservationsByDate(Date startDate, Date endDate, Pageable pageWithElements);
+
+
+    @Query("SELECT rs FROM Reservations AS rs " +
+            "JOIN rs.room AS r " +
+            "WHERE r.room_id = ?1 " +
+            "AND rs.start >= ?2 " +
+            "AND rs.end <= ?3 " +
+            "AND rs.status = 'active' ")
+    Page<Reservation> findBookedRoomsByDateAndRoom(Long roomId, Date startDate, Date endDate, Pageable pageWithElements);
 }

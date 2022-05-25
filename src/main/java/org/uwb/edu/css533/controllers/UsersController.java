@@ -24,8 +24,10 @@ public class UsersController {
     @Value("${paging.default.pageSize}")
     private int size;
 
+    @CrossOrigin
     @GetMapping
     public ResponseEntity<Page<User>> list(@RequestParam(value = "page") Integer page,
+//                                           @RequestParam(required=false) String sortKey,
                                            @RequestParam(required = false) Integer pageSize){
         Page<User> users = null;
         try{
@@ -39,6 +41,7 @@ public class UsersController {
         }
     }
 
+    @CrossOrigin
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
     public ResponseEntity<User> create(@RequestBody final User user){
@@ -50,6 +53,18 @@ public class UsersController {
         }
     }
 
+    @CrossOrigin
+    @GetMapping
+    @RequestMapping("/check/{user_name}")
+    public ResponseEntity<User> checkuser(@PathVariable("user_name") String userName){
+        try{
+            return new ResponseEntity<User>(userService.findByUserName(userName), HttpStatus.OK);
+        } catch(ApplicationNotFoundException exception){
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND, exception.getMessage());
+        }
+    }
+
+    @CrossOrigin
     @GetMapping
     @RequestMapping("{id}")
     public ResponseEntity<User> get(@PathVariable("id") Long id){
@@ -60,6 +75,7 @@ public class UsersController {
         }
     }
 
+    @CrossOrigin
     @RequestMapping(value = "{id}", method = RequestMethod.PUT)
     public ResponseEntity<User> update(@PathVariable Long id, @RequestBody final User user){
         try{
@@ -70,6 +86,7 @@ public class UsersController {
         }
     }
 
+    @CrossOrigin
     @RequestMapping(value = "{id}", method = RequestMethod.DELETE)
     public ResponseEntity delete(@PathVariable Long id){
         try{

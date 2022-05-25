@@ -3,15 +3,20 @@ package org.uwb.edu.css533.controllers;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.domain.Page;
+//import org.springframework.format.annotation.DateTimeFormat;
+
+import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.server.ResponseStatusException;
 import org.uwb.edu.css533.exception.ApplicationNotFoundException;
+import org.uwb.edu.css533.models.Reservation;
 import org.uwb.edu.css533.models.Room;
 import org.uwb.edu.css533.models.User;
 import org.uwb.edu.css533.services.RoomService;
 
+import java.time.format.DateTimeFormatter;
 import java.util.Date;
 import java.util.List;
 
@@ -26,6 +31,10 @@ public class RoomsController {
     @Value("${paging.default.pageSize}")
     private int size;
 
+//    private static final DateTimeFormatter FORMATTER =
+//            DateTimeFormat.forPattern("yyyy-MM-dd'T'HH:mm:ss");
+
+    @CrossOrigin
     @GetMapping
     public ResponseEntity<Page<Room>> listRooms(@RequestParam(value = "page" ) Integer page,
                                                 @RequestParam(required = false) Integer pageSize){
@@ -41,11 +50,32 @@ public class RoomsController {
         }
     }
 
+//    @CrossOrigin
+//    @GetMapping
+//    @RequestMapping("/booked/room/{roomId}")
+//    public ResponseEntity<Page<Room>> listByRoomAndDate(@PathVariable("roomId") Long id,
+//                                                                @RequestParam(value = "page") Integer page,
+//                                                                @RequestParam(value = "startDate") Date startDate,
+//                                                                @RequestParam(value = "endDate") Date endDate,
+//                                                                @RequestParam(required = false) Integer pageSize){
+//        Page<Room> rooms = null;
+//        try{
+//            if(pageSize == null)
+//                rooms = roomService.findRoomsByTimeAndRoom(id, startDate, endDate, page, size);
+//            else
+//                rooms = roomService.findRoomsByTimeAndRoom(id, startDate, endDate, page, pageSize);
+//            return new ResponseEntity<Page<Room>>(rooms, HttpStatus.OK);
+//        } catch(ApplicationNotFoundException exception){
+//            throw new ResponseStatusException(HttpStatus.NOT_FOUND, exception.getMessage());
+//        }
+//    }
+
+    @CrossOrigin
     @GetMapping
     @RequestMapping("/availability")
-    public ResponseEntity<Page<Room>> listByTime(@RequestParam(value = "startTime") Date startTime,
-                                                 @RequestParam(value = "endTime") Date endTime,
-                                                 @RequestParam(value = "pageSize") Integer page,
+    public ResponseEntity<Page<Room>> listByTime(@RequestParam(value = "startTime") @DateTimeFormat(pattern="yyyy.MM.dd'T'HH:mm:ss") Date startTime,
+                                                 @RequestParam(value = "endTime") @DateTimeFormat(pattern="yyyy.MM.dd'T'HH:mm:ss") Date endTime,
+                                                 @RequestParam(value = "page") Integer page,
                                                  @RequestParam(required = false) Integer pageSize){
         Page<Room> rooms = null;
         try{
@@ -59,6 +89,7 @@ public class RoomsController {
         }
     }
 
+    @CrossOrigin
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
     public ResponseEntity<Room> create(@RequestBody final Room room){
@@ -70,6 +101,7 @@ public class RoomsController {
         }
     }
 
+    @CrossOrigin
     @GetMapping
     @RequestMapping("{id}")
     public ResponseEntity<Room> get(@PathVariable("id") Long id){
@@ -80,6 +112,7 @@ public class RoomsController {
         }
     }
 
+    @CrossOrigin
     @RequestMapping(value = "{id}", method = RequestMethod.PUT)
     public ResponseEntity<Room> update(@PathVariable Long id, @RequestBody final Room room){
         try{
@@ -90,6 +123,7 @@ public class RoomsController {
         }
     }
 
+    @CrossOrigin
     @RequestMapping(value = "{id}", method = RequestMethod.DELETE)
     public ResponseEntity delete(@PathVariable Long id){
         try{

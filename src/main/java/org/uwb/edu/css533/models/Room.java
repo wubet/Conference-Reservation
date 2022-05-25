@@ -6,6 +6,7 @@ import lombok.Data;
 import javax.persistence.*;
 import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.NotNull;
+import java.io.Serializable;
 import java.util.Date;
 import java.util.List;
 
@@ -16,21 +17,21 @@ import java.util.List;
 @Entity(name = "rooms")
 @Data
 @JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
-public class Room {
+public class Room implements Serializable {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private long room_id;
     @NotNull
-    private Integer room_number;
+    private Integer roomNumber;
     @NotEmpty
     @Column(unique = true)
-    private String room_name;
+    private String roomName;
     @NotNull
-    private Integer room_capacity;
+    private Integer roomCapacity;
     @NotEmpty
-    private String room_location;
+    private String roomLocation;
     @NotEmpty
-    private String room_type;
+    private String roomType;
     @NotEmpty
     private String status;
 

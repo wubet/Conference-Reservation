@@ -9,6 +9,7 @@ import lombok.Setter;
 import javax.persistence.*;
 import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.NotNull;
+import java.io.Serializable;
 import java.util.Date;
 import java.util.List;
 
@@ -18,18 +19,22 @@ import java.util.List;
 @Entity(name="Reservations")
 @JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
 @Data
-public class Reservation {
+public class Reservation implements Serializable {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private long reservation_id;
-//    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "MM-DD-YYYY HH:MM")
-    @NotNull
-    private Date meeting_start_time;
-    @NotNull
-//    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "MM-DD-YYYY HH:MM")
-    private Date meeting_end_time;
+    private String event_id;
     @NotEmpty
-    private String reservation_description;
+    private String title;
+    @NotEmpty
+    private String description;
+//    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "MM-DD-YYYY HH:MM")
+    @NotNull
+    private Date start;
+    @NotNull
+//    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "MM-DD-YYYY HH:MM")
+    private Date end;
+
     @NotEmpty
     private String status;
 

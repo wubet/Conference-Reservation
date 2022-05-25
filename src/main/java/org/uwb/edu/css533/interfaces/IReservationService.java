@@ -9,7 +9,8 @@ import java.util.List;
 
 public interface IReservationService {
     Page<Reservation> listAllReservations(int page, int pageSize);
-    Page<Reservation> findReservationByDate(Date meetingDate, Date rangeDate, Integer page, int size);
+    Page<Reservation> findReservationsByDate(Date meetingDate, Date rangeDate, Integer page, int size);
+    Page<Reservation> findReservationByDateAndRoom(Long roomId, Date startDate, Date endDate, Integer page, int pageSize);
     Reservation findReservation(Long id);
     Reservation createReservation(Reservation reservation);
     Reservation updateReservation(Reservation reservation, Long id);

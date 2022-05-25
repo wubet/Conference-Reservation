@@ -5,6 +5,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.uwb.edu.css533.exception.ApplicationNotFoundException;
 import org.uwb.edu.css533.interfaces.IReservationService;
@@ -23,9 +24,12 @@ public class ReservationService implements IReservationService {
     @Autowired
     private IReservationRepository reservationRepository;
 
-    /*
-    *
-    * */
+    /**
+     *
+     * @param page
+     * @param pageSize
+     * @return
+     */
     public Page<Reservation> listAllReservations(int page, int pageSize){
         Pageable PageWithElements = PageRequest.of(page, pageSize);
         Page<Reservation> optionalReservations = null;
@@ -37,35 +41,53 @@ public class ReservationService implements IReservationService {
         return optionalReservations;
     }
 
-    /*
+    /**
      *
-     * */
+     * @param startDate
+     * @param endDate
+     * @param page
+     * @param pageSize
+     * @return
+     */
     @Override
-    public Page<Reservation> findReservationByDate(Date startDate, Date endDate, Integer page, int pageSize) {
+    public Page<Reservation> findReservationsByDate(Date startDate, Date endDate, Integer page, int pageSize) {
         Pageable PageWithElements = PageRequest.of(page, pageSize);
         Page<Reservation> optionalReservations = null;
         try{
-            optionalReservations = reservationRepository.findBookedRoomsByDate(startDate, endDate, PageWithElements);
+            optionalReservations = reservationRepository.findReservationsByDate(startDate, endDate, PageWithElements);
         }catch(Exception ex){
             throw new ApplicationNotFoundException(ex.getMessage());
         }
         return optionalReservations;
     }
 
-//    public Page<Reservation> listAllReservations(int pageSize){
-//        Pageable PageWithElements = PageRequest.of(0, pageSize);
-//        Page<Reservation> optionalReservations = null;
-//        try{
-//            optionalReservations = reservationRepository.findAll(PageWithElements);
-//        }catch(Exception ex){
-//            throw new ApplicationNotFoundException(ex.getMessage());
-//        }
-//        return optionalReservations;
-//    }
+    /**
+     *
+     * @param roomId
+     * @param startDate
+     * @param endDate
+     * @param page
+     * @param pageSize
+     * @return
+     */
+    @Override
+    public Page<Reservation> findReservationByDateAndRoom(Long roomId, Date startDate, Date endDate, Integer page, int pageSize) {
+        Pageable PageWithElements = PageRequest.of(page, pageSize);
+        Page<Reservation> optionalReservations = null;
+        try{
+            optionalReservations = reservationRepository.findBookedRoomsByDateAndRoom(roomId, startDate, endDate, PageWithElements);
+        }catch(Exception ex){
+            throw new ApplicationNotFoundException(ex.getMessage());
+        }
+        return optionalReservations;
+    }
 
-    /*
-    *
-    * */
+
+    /**
+     *
+     * @param id
+     * @return
+     */
     public Reservation findReservation(Long id) {
 
         Reservation reservation = null;
@@ -80,9 +102,11 @@ public class ReservationService implements IReservationService {
         return reservation;
     }
 
-    /*
-    *
-    * */
+    /**
+     *
+     * @param reservation
+     * @return
+     */
     public Reservation createReservation(Reservation reservation){
         Reservation newReservation = null;
         try{
@@ -95,23 +119,13 @@ public class ReservationService implements IReservationService {
         return newReservation;
     }
 
-//    public Reservation updateReservation(Reservation reservation, Long id){
-//        Reservation updatedReservation = null;
-//        try{
-//            Optional<Reservation> existingReservation =  reservationRepository.findById(id);
-//            //BeanUtils.copyProperties(reservation, existingReservation, "reservation_id");
-//            if(existingReservation != null)
-//                reservation.setReservation_id(existingReservation.get().getReservation_id());
-//            updatedReservation = reservationRepository.save(reservation);
-//        }catch(Exception ex){
-//            throw new ApplicationNotFoundException(ex.getMessage());
-//        }
-//        return updatedReservation;
-//    }
 
-    /*
-    *
-    * */
+    /**
+     *
+     * @param reservation
+     * @param id
+     * @return
+     */
     public Reservation updateReservation(Reservation reservation, Long id){
         Reservation updatedReservation = null;
         try{
@@ -124,8 +138,10 @@ public class ReservationService implements IReservationService {
         return updatedReservation;
     }
 
-    /*
-    * */
+    /**
+     *
+     * @param id
+     */
     public void deleteReservation(Long id){
         try{
             reservationRepository.deleteById(id);

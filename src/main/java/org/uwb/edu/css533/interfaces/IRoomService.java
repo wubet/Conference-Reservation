@@ -9,6 +9,7 @@ import java.util.List;
 public interface IRoomService {
     Page<Room> listAllRooms(int page, int pageSize);
     Page<Room> findRoomsByTime(Date startTime, Date endTime, int page, int pageSize);
+//    Page<Room> findRoomsByTimeAndRoom(Long roomId, Date startTime, Date endTime, int page, int pageSize);
     Room findRoom(Long id);
     Room createRoom(Room room);
     Room updateRoom(Room room, Long id);
