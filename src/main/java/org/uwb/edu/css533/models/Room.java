@@ -42,9 +42,7 @@ public class Room implements Serializable {
     @Temporal(TemporalType.TIMESTAMP)
     Date createDateTime;
 
-//    @JsonManagedReference
-    @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY, mappedBy = "room")
-    @JsonIgnoreProperties("room, user")
+    @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY, orphanRemoval = true)
     private List<Reservation> reservations;
 
     public Room() {
