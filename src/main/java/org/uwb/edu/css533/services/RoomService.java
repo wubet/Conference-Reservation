@@ -9,9 +9,11 @@ import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.uwb.edu.css533.exception.ApplicationNotFoundException;
 import org.uwb.edu.css533.interfaces.IRoomService;
+import org.uwb.edu.css533.models.Reservation;
 import org.uwb.edu.css533.models.Room;
 import org.uwb.edu.css533.repositories.IRoomRepository;
 
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.Optional;
@@ -87,6 +89,8 @@ public class RoomService implements IRoomService {
         Room newRoom = null;
         try{
             if(room != null){
+                room.setCreateDateTime(new Date());
+                room.setUpdateDateTime(new Date());
                 newRoom = roomRepository.saveAndFlush(room);
             }
         }catch(Exception ex){
@@ -105,7 +109,10 @@ public class RoomService implements IRoomService {
         Room updatedRoom = null;
         try{
             Room existingRoom =  roomRepository.getById(id);
+            Date date = existingRoom.getCreateDateTime();
             BeanUtils.copyProperties(room, existingRoom, "room_id");
+            existingRoom.setUpdateDateTime(new Date());
+            existingRoom.setCreateDateTime(date);
             updatedRoom = roomRepository.saveAndFlush(existingRoom);
         }catch(Exception ex){
             throw new ApplicationNotFoundException(ex.getMessage());

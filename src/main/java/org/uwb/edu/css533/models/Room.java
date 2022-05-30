@@ -42,7 +42,7 @@ public class Room implements Serializable {
     @Temporal(TemporalType.TIMESTAMP)
     Date createDateTime;
 
-    @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY, orphanRemoval = true)
+    @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     private List<Reservation> reservations;
 
     public Room() {

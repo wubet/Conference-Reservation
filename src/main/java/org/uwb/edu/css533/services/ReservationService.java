@@ -111,6 +111,8 @@ public class ReservationService implements IReservationService {
         Reservation newReservation = null;
         try{
             if(reservation != null){
+                reservation.setCreateDateTime(new Date());
+                reservation.setUpdateDateTime(new Date());
                 newReservation = reservationRepository.saveAndFlush(reservation);
             }
         }catch(Exception ex){
@@ -130,7 +132,11 @@ public class ReservationService implements IReservationService {
         Reservation updatedReservation = null;
         try{
             Reservation existingReservation =  reservationRepository.getById(id);
+            Date date = existingReservation.getCreateDateTime();
             BeanUtils.copyProperties(reservation, existingReservation, "reservation_id");
+            existingReservation.setUpdateDateTime(new Date());
+            existingReservation.setCreateDateTime(date);
+
             updatedReservation = reservationRepository.saveAndFlush(existingReservation);
         }catch(Exception ex){
             throw new ApplicationNotFoundException(ex.getMessage());

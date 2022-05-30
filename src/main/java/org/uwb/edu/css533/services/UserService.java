@@ -14,6 +14,7 @@ import org.uwb.edu.css533.interfaces.IUserService;
 import org.uwb.edu.css533.models.User;
 import org.uwb.edu.css533.repositories.IUserRepository;
 
+import java.util.Date;
 import java.util.Optional;
 
 @Service
@@ -87,6 +88,8 @@ public class UserService implements IUserService {
         User newUser = null;
         try{
             if(user != null){
+                user.setCreateDateTime(new Date());
+                user.setUpdateDateTime(new Date());
                 newUser = userRepository.saveAndFlush(user);
             }
         }catch(Exception ex){
@@ -105,7 +108,10 @@ public class UserService implements IUserService {
         User updatedRoom = null;
         try{
             User existingUser =  userRepository.getById(id);
+            Date date = existingUser.getCreateDateTime();
             BeanUtils.copyProperties(user, existingUser, "user_id");
+            existingUser.setCreateDateTime(date);
+            existingUser.setUpdateDateTime(new Date());
             updatedRoom = userRepository.saveAndFlush(existingUser);
         }catch(Exception ex){
             throw new ApplicationNotFoundException(ex.getMessage());
